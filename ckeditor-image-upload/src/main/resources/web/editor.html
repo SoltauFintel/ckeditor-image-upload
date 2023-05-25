@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CKEditor with image upload</title>
+    
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/33.0.0/decoupled-document/ckeditor.js"></script>
+    <script src="/js/uploader.js"></script>
+</head>
+<body>
+
+<form class="form-horizontal" action="/form-action" method="get">
+    <fieldset>
+        <p><button id="submit" type="submit" style="width: 200px; height: 30px;">Save</button></p>
+        <div id="toolbar-containerDE"></div>
+        <div id="editorDE" style="border: 2px dotted #66AFE9;"><p>Please insert a PNG image.</p><p></p></div>
+    </fieldset>
+</form>
+
+<script>
+    let editorDE;
+    DecoupledEditor
+        .create(document.querySelector('#editorDE'), {
+            extraPlugins: [ MyCustomUploadAdapterPlugin ],
+            toolbar: {
+                removeItems: ['mediaEmbed', 'indent', 'outdent']
+            }
+        })
+        .then( editor => {
+            editorDE = editor;
+            const toolbarContainer = document.querySelector('#toolbar-containerDE');
+            toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+        } )
+        .catch( error => {
+            console.error(error);
+        } );
+
+    document.querySelector('#submit').addEventListener('click', () => {
+        $.post("/save", {
+            contentDE: editorDE.getData()
+        });
+    } );
+</script>
+
+</body>
+</html>
