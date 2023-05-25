@@ -4,7 +4,9 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
-// form action GET
+// GET
+// form action
+// see editor.html line 22
 public class FormAction implements Route {
 
 	@Override

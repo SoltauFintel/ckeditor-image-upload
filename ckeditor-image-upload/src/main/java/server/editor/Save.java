@@ -7,6 +7,8 @@ import spark.Response;
 import spark.Route;
 
 // POST
+// Receives the editor content
+// see editor.html line 49
 public class Save implements Route {
 
 	@Override
@@ -19,7 +21,7 @@ public class Save implements Route {
 		}
 		System.out.println(prettyHTML(content));
 		
-		return "<html><body>ok, saved. <a href=editor.html>editor.html</a></body></html>";
+		return "ok, saved";
 	}
 	
 	public static String prettyHTML(String html) {

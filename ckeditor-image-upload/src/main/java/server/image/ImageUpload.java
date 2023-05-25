@@ -13,13 +13,17 @@ import spark.Response;
 import spark.Route;
 import spark.utils.IOUtils;
 
+// POST
+// Receives uploaded image. Saves the image into folder 'images'.
+// See also uploader.js line 32.
 public class ImageUpload implements Route {
 	private static int counter = 0;
 	public static String IMAGE_FOLDER = "images/";
 
 	@Override
 	public Object handle(Request req, Response res) throws Exception {
-		req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("upload"));
+		String fieldName = "upload"; // see uploader.js line 84
+		req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement(fieldName));
 		System.out.println("\nImageUpload ----");
 		res.type("application/json");
 
@@ -36,11 +40,13 @@ public class ImageUpload implements Route {
 
 		counter++;
 		File file = new File(IMAGE_FOLDER + "image-" + counter + ext);
+		file.getParentFile().mkdirs();
 		try (FileOutputStream fos = new FileOutputStream(file)) {
 			IOUtils.copy(part.getInputStream(), fos);
 		}
-		System.out.println("\tsaved: " + file.toString());
+		System.out.println("\tImageUpload saved: " + file.toString());
 
+		// Response must be JSON, containing url field.
 		Success ret = new Success();
 		ret.setUrl(ImageDownload.DOWNLOAD + "?dn=" + file.getName());
 		String json = new Gson().toJson(ret);

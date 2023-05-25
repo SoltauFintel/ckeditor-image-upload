@@ -8,6 +8,7 @@ import spark.Response;
 import spark.Route;
 import spark.utils.IOUtils;
 
+// After uploading an image CKeditor directly downloads the image.
 public class ImageDownload implements Route {
 	public static final String DOWNLOAD = "/image-download";
 
